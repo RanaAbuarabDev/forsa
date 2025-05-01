@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdatePostRequest extends FormRequest
 {
@@ -22,12 +23,16 @@ class UpdatePostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title'=>'string|min:3|max:100|nullable|sometimes',
-            'description'=>'string|min:3|max:2000|nullable|sometimes',
-            'place'=>'string|min:2|max:100|sometimes',
-            'salary'=>'integer|nullable|sometimes',
-            'Number_of_hours'=>'integer|nullable|sometimes',
-            'ApplyStatus'=>'boolian|nullable'
+            'description' => 'string',
+            'governorate_id' => 'exists:governorates,id',
+            'skills' => 'nullable|array',
+            'skills.*' => 'string',
+            
+           
+            'salary'=> 'nullable|string|max:50',
+            'work_mode' => ['nullable', Rule::in(['full_time', 'part_time','permanent','temporary'])],
+            'job_type' => ['nullable', Rule::in(['online', 'on_site','onlin_or_onSite'])],
+            'is_bookable' => 'nullable|boolean',
         ];
     }
 }

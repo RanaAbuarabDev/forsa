@@ -21,13 +21,21 @@ class StorePostRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'title'=>'string|min:3|max:100|nullable',
-            'description'=>'string|min:3|max:2000|nullable',
-            'place'=>'required|string|min:2|max:100',
-            'salary'=>'integer|nullable',
-            'Number_of_hours'=>'integer|nullable',
-            'ApplyStatus'=>'boolian|nullable'
+        $rules = [
+            'type' => 'required|in:job_creation,announcement',
+            'description' => 'required|string',
+            'governorate_id' => 'required|exists:governorates,id',
+            'skills' => 'required|array|min:1',
+            'skills.*' => 'string',
         ];
+
+        if ($this->type === 'job_creation') {
+            $rules['work_mode'] = 'nullable|in:temporary,permanent,part_time,full_time';
+            $rules['job_type'] = 'nullable|in:onlin_or_onSite,on_site,online';
+            $rules['is_bookable'] = 'nullable|boolean';
+            $rules['salary'] = 'nullable|string|max:50';
+        }
+    
+        return $rules;
     }
 }

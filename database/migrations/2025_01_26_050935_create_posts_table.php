@@ -12,17 +12,21 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('posts', function (Blueprint $table) {
-            $table->id();
-            $table->string('title')->nullable();
-            $table->string('description')->nullable();
-            $table->string('place');
-            $table->integer('salary')->nullable();
-            $table->integer('Number_of_hours')->nullable();
-            $table->boolean('ApplyStatus')->nullable();
-            $table->dateTime('time')->nullable();
-            $table->timestamps();
-            
-        });
+        $table->id();
+        
+        
+        $table->string('type'); 
+        $table->text('description');
+        $table->foreignId('user_id')->constrained()->onDelete('cascade');
+        $table->foreignId('governorate_id')->constrained()->onDelete('cascade');
+
+        $table->enum('work_mode', ['full_time', 'part_time','permanent','temporary'])->nullable();
+        $table->enum('job_type', ['online', 'on_site','onlin_or_onSite'])->nullable();
+        $table->boolean('is_bookable')->default(false);
+        $table->string('salary')->nullable();
+
+        $table->timestamps();
+    });
     }
 
     /**
