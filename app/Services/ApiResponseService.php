@@ -17,7 +17,7 @@ class ApiResponseService
     public static function success($data = null, $message = 'تمت العملية بنجاح', $status = 200)
     {
         return response()->json([
-            "status" => 'success',
+            //"status" => 'success',
             "message" => trans($message),
             "data" => $data,
         ], $status);
@@ -34,7 +34,7 @@ class ApiResponseService
     public static function error($message = 'فشلت العملية', $status = 400, $data = null)
     {
         return response()->json([
-            'status' => 'error',
+            //'status' => 'error',
             'message' => trans($message),
             'data' => $data,
         ], $status);

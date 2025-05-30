@@ -17,17 +17,17 @@ class PostResource extends JsonResource
             'description' => $this->description,
             'governorate' => $this->governorate->name,
             'skills' => $this->skills->pluck('name'),
+            'job_type' => $this->job_type,
+            'job_title' => $this->experience?->job_title,
             'created_at' => $this->created_at->diffForHumans(),
             'name' => $this->user->name,
-            'img'=> $this->user->profile->img,
-           
+            'img' => $this->user->profile?->img,
+            
         ];
 
         if ($this->type === PostType::JobCreation->value) {
             $base += [
-                'work_mode' => $this->work_mode,
-                'job_type' => $this->job_type,
-                'is_bookable' => $this->is_bookable,
+                'online'=>$this->online,
                 'salary'=> $this->salary,
             ];
 

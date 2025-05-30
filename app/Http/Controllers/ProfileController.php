@@ -29,7 +29,7 @@ class ProfileController extends Controller
         $profile = $this->profileService->createProfile($request->validated());
 
         return response()->json([
-            'message' => 'Profile created successfully.',
+            'message' => 'تم انشاء الملف الشخصي بنجاح',
             'data' => new ProfileResource($profile),
         ]);
     }
@@ -40,7 +40,7 @@ class ProfileController extends Controller
         $profile = $user->profile;
 
         if (!$profile) {
-            return response()->json(['message' => 'Profile not found.'], 404);
+            return response()->json(['message' => 'الملف الشخصي غير موجود'], 404);
         }
 
         return response()->json([
@@ -57,7 +57,7 @@ class ProfileController extends Controller
         $updatedProfile = $this->profileService->updateProfile($request->validated(), $profile);
 
         return response()->json([
-            'message' => 'Profile updated successfully.',
+            'message' => 'تم تحديث الملف الشخصي بنجاح',
             'data' => new ProfileResource($updatedProfile),
         ]);
     }
@@ -67,7 +67,7 @@ class ProfileController extends Controller
         $profile = \App\Models\Profile::where('user_id', $userId)->first();
 
         if (!$profile) {
-            return response()->json(['message' => 'Profile not found.'], 404);
+            return response()->json(['message' => 'الملف الشخصي غير موجود'], 404);
         }
 
         $this->authorize('view', $profile);

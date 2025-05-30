@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tags', function (Blueprint $table) {
+        Schema::create('desired_jobs', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->foreignId('post_id')->constrained()->onDelete('cascade');
             $table->foreignId('profile_id')->constrained()->onDelete('cascade');
+            $table->string('job_title');
+            $table->string('job_location');
+            $table->enum('employment_type', ['full-time', 'part-time', 'freelance', 'volunteer', 'training','temporary','contracts']);
             $table->timestamps();
         });
     }
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tags');
+        Schema::dropIfExists('desired_jobs');
     }
 };

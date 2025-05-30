@@ -7,7 +7,10 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ApplicationController;
+use App\Http\Controllers\SavePostController;
 use App\Http\Middleware\EnsureUserHasNoProfile;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\FilterController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -162,15 +165,25 @@ Route::prefix('v1')->group(function(){
         Route::get('/posts', [PostController::class, 'index']);
         Route::get('/show-post/{id}', [PostController::class, 'show']);
         Route::post('/update-post/{id}', [PostController::class, 'update']);
-        Route::post('/delete-post/{id}', [PostController::class, 'destroy']);
-        Route::get('/posts/filter', [PostController::class, 'filterByGovernorate']);
-        Route::get('/posts/skill/{skill}', [PostController::class, 'filterBySkill']);
+        Route::delete('/delete-post/{id}', [PostController::class, 'destroy']);
         Route::get('/posts/my-posts', [PostController::class, 'getMyPosts']);
-        Route::post('/posts/{postId}/save', [PostController::class, 'savePost']);
-        Route::get('/user/favorites', [PostController::class, 'showFavorites']);
-        Route::post('/user/favorites/{postId}', [PostController::class, 'removeFavorite']);
+       
     });
 
+
+    Route::middleware(('auth:api'))->group(function(){
+
+        Route::get('/posts/filter', [FilterController::class, 'PostFilter']);
+        Route::get('/users/filter', [FilterController::class, 'UserFilter']);
+
+        
+    });
+
+    Route::middleware('auth:api')->group(function(){
+        Route::post('/posts/{postId}/save', [SavePostController::class, 'savePost']);
+        Route::get('/user/favorites', [SavePostController::class, 'showFavorites']);
+        Route::delete('/user/favorites/{postId}', [SavePostController::class, 'removeFavorite']);
+    });
 
     
     Route::middleware('auth:api')->group(function(){
@@ -180,8 +193,11 @@ Route::prefix('v1')->group(function(){
     });
     
 
-    
-
+    Route::middleware('auth:api')->group(function(){
+        Route::get('/notifications', [NotificationController::class, 'index']);
+        Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead']);
+        Route::delete('/notifications', [NotificationController::class, 'deleteAllNotifications']);
+    });
     
     
 

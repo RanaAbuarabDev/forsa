@@ -29,8 +29,7 @@ class PostService
 
 
     public function update(User $user, int $postId, array $data): Post{
-
-
+        
         return DB::transaction(function () use ($user, $postId, $data) {
             $post = Post::findOrFail($postId);
 
@@ -38,18 +37,13 @@ class PostService
                 abort(403, 'Unauthorized');
             }
 
-            $skills = $data['skills'] ?? null;
-            unset($data['skills']);
-
             $post->update($data);
-
-            if (!is_null($skills)) {
-                $post->skills()->sync($skills);
-            }
 
             return $post->fresh();
         });
     }
+
+
 
     public function delete(User $user, int $postId): void{
         DB::transaction(function () use ($user, $postId) {

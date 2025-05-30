@@ -4,6 +4,9 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+use App\Enums\PostType;
+use Illuminate\Validation\Rules\Enum;
+
 class StorePostRequest extends FormRequest
 {
     /**
@@ -22,17 +25,17 @@ class StorePostRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'type' => 'required|in:job_creation,announcement',
+            'type' => ['required', new Enum(PostType::class)],
             'description' => 'required|string',
             'governorate_id' => 'required|exists:governorates,id',
+            'experience' => 'required|string|max:100',
             'skills' => 'required|array|min:1',
             'skills.*' => 'string',
+            'job_type' => 'nullable|in:training,volunteer,temporary,full-time,part-time,contracts,free-work',
         ];
 
-        if ($this->type === 'job_creation') {
-            $rules['work_mode'] = 'nullable|in:temporary,permanent,part_time,full_time';
-            $rules['job_type'] = 'nullable|in:onlin_or_onSite,on_site,online';
-            $rules['is_bookable'] = 'nullable|boolean';
+        if ($this->input('type') === 'job_creation') {
+            $rules['online'] = 'nullable|boolean';
             $rules['salary'] = 'nullable|string|max:50';
         }
     

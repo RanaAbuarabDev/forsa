@@ -14,10 +14,10 @@ class Post extends Model
         'type',
         'description',
         'governorate_id',
-        'work_mode',
+        'experience_id',
+        'user_id',
         'job_type',
-        'job_duration',
-        'is_bookable',
+        'online',
         'salary',
     ];
 
@@ -45,6 +45,10 @@ class Post extends Model
     
     public function applicants() {
         return $this->belongsToMany(User::class, 'applications');
+    }
+
+    public function experiences(){
+        return $this->belongsTo(Experience::class);
     }
 
 }

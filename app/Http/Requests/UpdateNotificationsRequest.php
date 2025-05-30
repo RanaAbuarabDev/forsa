@@ -8,7 +8,7 @@ class UpdateNotificationsRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true; // أو تقدر تضيف شروط التحقق من المستخدم هون
+        return true; 
     }
 
     public function rules(): array

@@ -11,12 +11,15 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 
+
 /**
  * @property-read \App\Models\Profile|null $profile
  */
 class User extends Authenticatable implements JWTSubject {
-    use HasFactory, Notifiable;
-
+    use HasFactory;
+    use Notifiable {
+        notify as traitNotify;
+    }
     /**
      * The attributes that are mass assignable.
      *
@@ -107,7 +110,7 @@ class User extends Authenticatable implements JWTSubject {
     public function notify($instance): void
     {
         if ($this->notifications_enabled) {
-            parent::notify($instance);
+            $this->traitNotify($instance);
         }
     }
 

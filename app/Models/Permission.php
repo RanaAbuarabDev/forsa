@@ -9,7 +9,7 @@ class Permission extends Model
 {
     use HasFactory;
 
-    // تحديد العلاقات
+    
     public function roles()
     {
         return $this->belongsToMany(Role::class, 'role_permission');

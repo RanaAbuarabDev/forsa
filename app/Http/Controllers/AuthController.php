@@ -60,7 +60,7 @@ class AuthController extends Controller
                 'token' => $response['token'],
                 'type' => 'bearer',
             ]
-        ], 'Login successful', $response['code']);
+        ], 'تم تسجيل الدخول بنجاح ', $response['code']);
     }
 
      /**
@@ -75,7 +75,7 @@ class AuthController extends Controller
 
         $response = $this->authService->register($data);
 
-       // Send OTP to the user's email
+ 
        $this->otpService->sendOtp($response['user']->email, 'registration');
 
 
@@ -83,7 +83,7 @@ class AuthController extends Controller
             [
                 'user' => $response['user'],
             ], 
-            'تم إنشاء الحساب بنجاح. تم إرسال رمز التحقق إلى بريدك الإلكتروني، يرجى التحقق قبل تسجيل الدخول.',
+            'تم إنشاء الحساب بنجاح. و إرسال رمز التحقق إلى بريدك الإلكتروني، يرجى التحقق قبل تسجيل الدخول.',
          201);
     }
 
@@ -110,14 +110,14 @@ class AuthController extends Controller
     ) {
         $email = $request->email;
     
-        // التحقق من وجود المستخدم
+        //  وجود المستخدم
         $user = \App\Models\User::where('email', $email)->first();
     
         if (!$user) {
             return ApiResponseService::error('المستخدم غير موجود', 404);
         }
     
-        // التحقق من الحظر المؤقت
+        // اتحقق من الحظر المؤقت
         if ($attemptService->isLocked($email)) {
             $remainingSeconds = $attemptService->getRemainingLockTime($email);
             $minutes = ceil($remainingSeconds / 60);
@@ -132,7 +132,7 @@ class AuthController extends Controller
             );
         }
     
-        // التحقق من الرمز
+        // عم اتحقق من الرمز
         $result = $otpVerificationService->verify($email, $request->otp, 'registration');
     
         if (!$result['success']) {
@@ -147,7 +147,7 @@ class AuthController extends Controller
             return ApiResponseService::error("رمز التحقق غير صحيح. تبقى {$remaining} محاولات.", 400);
         }
     
-        // نجاح
+        
         $attemptService->clearAttempts($email);
     
         $token = JWTAuth::fromUser($user);
@@ -226,32 +226,32 @@ class AuthController extends Controller
     
 
         if ($attemptService->isLocked($email)) {
-            $remainingSeconds = $attemptService->getRemainingLockTime($email);
-            $minutes = ceil($remainingSeconds / 60);
-        
-            return ApiResponseService::error(
-                "تم تجاوز عدد المحاولات المسموح بها. يرجى المحاولة بعد {$minutes} دقيقة.",
-                429,
-                [
-                    'remaining_seconds' => $remainingSeconds,
-                    'locked_until' => now()->addSeconds($remainingSeconds)->toDateTimeString(),
-                ]
-            );
-        }
+                $remainingSeconds = $attemptService->getRemainingLockTime($email);
+                $minutes = ceil($remainingSeconds / 60);
+            
+                return ApiResponseService::error(
+                    "تم تجاوز عدد المحاولات المسموح بها. يرجى المحاولة بعد {$minutes} دقيقة.",
+                    429,
+                    [
+                        'remaining_seconds' => $remainingSeconds,
+                        'locked_until' => now()->addSeconds($remainingSeconds)->toDateTimeString(),
+                    ]
+                );
+            }
 
          $result = $this->otpService->verifyOtp($email, $request->otp, 'password_reset');
 
          if (!$result['success']) {
-            $attempts = $attemptService->incrementAttempts($email);
+                $attempts = $attemptService->incrementAttempts($email);
 
-            if ($attemptService->hasExceededAttempts($email)) {
-                 $attemptService->applyLock($email);
-             return ApiResponseService::error("تم تجاوز عدد المحاولات المسموح بها. يرجى المحاولة بعد 30 دقيقة.", 429);
-            }
+                if ($attemptService->hasExceededAttempts($email)) {
+                    $attemptService->applyLock($email);
+                return ApiResponseService::error("تم تجاوز عدد المحاولات المسموح بها. يرجى المحاولة بعد 30 دقيقة.", 429);
+                }
 
-        $remaining = $attemptService->remainingAttempts($email);
-        return ApiResponseService::error("رمز التحقق غير صحيح. تبقى {$remaining} محاولات.", 400);
-    }
+            $remaining = $attemptService->remainingAttempts($email);
+            return ApiResponseService::error("رمز التحقق غير صحيح. تبقى {$remaining} محاولات.", 400);
+        }
 
         $attemptService->clearAttempts($email); // Reset after success
 

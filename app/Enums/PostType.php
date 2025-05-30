@@ -5,6 +5,6 @@ namespace App\Enums;
 
 enum PostType : string
 {
-    case Announcement = 'announcement';
+    case Announcement = 'jop_request';
     case JobCreation = 'job_creation';
 }

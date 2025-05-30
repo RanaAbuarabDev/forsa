@@ -6,13 +6,15 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Post;
 use App\Models\Application;
 use Illuminate\Http\Request;
+use App\Notifications\JobBookedNotification;
+use App\Http\Resources\PostResource;
 
 class ApplicationController extends Controller
 {
     public function store(Post $post){
         $user = Auth::user();
 
-        $post = Post::where('id', $post->id)->lockForUpdate()->firstOrFail();
+        $post = Post::where('id', $post->id)->with('user')->lockForUpdate()->firstOrFail();
 
         $exists = Application::where('user_id', $user->id)
                             ->where('post_id', $post->id)
@@ -27,14 +29,29 @@ class ApplicationController extends Controller
             'post_id' => $post->id,
         ]);
 
+        if ($post->user){
+            $user = Auth::user()->load('profile');
+            $post->user->notify(new JobBookedNotification($user, $post->id));
+        }
+        
         return response()->json(['message' => 'تم التقديم بنجاح']);
     }
 
 
     public function index(){
         $user = Auth::user();
-        $posts = $user->appliedPosts()->paginate(10);
-        return response()->json($posts);
+        $posts = $user->appliedPosts()
+                  ->with(['user.profile', 'governorate', 'skills'])
+                  ->paginate(10);
+
+                  
+        if ($posts->isEmpty()) {
+            return response()->json([
+                'message' => 'لم يتم التقدم إلى وظيفة بعد',
+                'data' => [],
+            ]);
+        }
+        return PostResource::collection($posts);
     }
     
 

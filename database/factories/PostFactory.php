@@ -25,20 +25,15 @@ class PostFactory extends Factory
         return [
             'type' => $type,
             'description' => $this->faker->paragraphs(3, true),
-            'user_id' => User::factory(), // ممكن تختار مستخدم موجود لو بدك
+            'user_id' => User::factory(), 
             'governorate_id' => $this->faker->numberBetween(1, 14),
             
-            'work_mode' => $type === 'job_creation' 
-                ? $this->faker->randomElement(['full_time', 'part_time', 'permanent', 'temporary'])
-                : null,
 
             'job_type' => $type === 'job_creation'
-                ? $this->faker->randomElement(['online', 'on_site', 'onlin_or_onSite'])
+                ? $this->faker->randomElement(['training', 'volunteer','temporary','full-time','part-time','contracts','free-work'])
                 : null,
 
-            'is_bookable' => $type === 'job_creation'
-                ? $this->faker->boolean()
-                : false, // لأنو الافتراضي false، حتى لو مش معبّى
+           
 
             'salary' => $type === 'job_creation'
                 ? $this->faker->numberBetween(300, 5000) . ' $'

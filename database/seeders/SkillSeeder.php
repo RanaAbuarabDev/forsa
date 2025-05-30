@@ -37,7 +37,6 @@ class SkillSeeder extends Seeder
             ['name' => 'PostgreSQL'],
             ['name' => 'MongoDB'],
             ['name' => 'SQL'],
-            ['name' => 'GraphQL'],
             ['name' => 'RESTful API'],
             ['name' => 'Docker'],
             ['name' => 'Redis'],
@@ -78,7 +77,6 @@ class SkillSeeder extends Seeder
             ['name' => 'Digital Marketing'],
             ['name' => 'Content Writing'],
             ['name' => 'Copywriting'],
-            ['name' => 'Public Speaking'],
             ['name' => 'Project Management'],
             ['name' => 'Business Analysis'],
             ['name' => 'Product Management'],
@@ -144,7 +142,6 @@ class SkillSeeder extends Seeder
             ['name' => 'Online Course Creation'],
             ['name' => 'Coaching'],
             ['name' => 'Mentoring'],
-            ['name' => 'Public Speaking'],
 
             // الأمان السيبراني
             ['name' => 'Ethical Hacking'],
