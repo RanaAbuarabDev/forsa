@@ -47,7 +47,7 @@ class Post extends Model
         return $this->belongsToMany(User::class, 'applications');
     }
 
-    public function experiences(){
+    public function experience(){
         return $this->belongsTo(Experience::class);
     }
 

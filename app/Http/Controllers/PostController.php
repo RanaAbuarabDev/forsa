@@ -216,6 +216,16 @@ class PostController extends Controller
         return PostResource::collection($posts);
     }
 
+
+    public function getUserPosts(User $user){
+        
+        $posts = $user->posts()
+            ->with(['skills', 'governorate', 'user.profile'])
+            ->latest()
+            ->paginate(10);
+
+        return PostResource::collection($posts);
+    }
         
 }
 

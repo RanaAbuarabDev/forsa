@@ -167,14 +167,16 @@ Route::prefix('v1')->group(function(){
         Route::post('/update-post/{id}', [PostController::class, 'update']);
         Route::delete('/delete-post/{id}', [PostController::class, 'destroy']);
         Route::get('/posts/my-posts', [PostController::class, 'getMyPosts']);
+        Route::get('/users/{user}/posts', [PostController::class, 'getUserPosts']);
+
        
     });
 
 
     Route::middleware(('auth:api'))->group(function(){
 
-        Route::get('/posts/filter', [FilterController::class, 'PostFilter']);
-        Route::get('/users/filter', [FilterController::class, 'UserFilter']);
+        Route::get('/posts/filter', [FilterController::class, 'postFilter']);
+        Route::get('/users/filter', [FilterController::class, 'userFilter']);
 
         
     });

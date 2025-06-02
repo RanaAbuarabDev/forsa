@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             GovernorateSeeder::class,
             SkillSeeder::class, 
+            PostSeeder::class,
         ]);
 
         User::factory()->create([
