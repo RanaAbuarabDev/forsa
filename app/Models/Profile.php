@@ -2,10 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Profile extends Model
 {
+
+    use HasFactory;
+    
     protected $fillable=['img','BD','residence_area','gender','governorate_id','employment_status','cv_path'];
 
 
