@@ -26,11 +26,12 @@ class DatabaseSeeder extends Seeder
         User::factory(10)->create();
 
         $this->call([
-            GovernorateSeeder::class,
-            SkillSeeder::class,
-            ExperienceSeeder::class,
-            CertificateSeeder::class,
-            PostSeeder::class,
+            // GovernorateSeeder::class,
+            // SkillSeeder::class,
+            // ExperienceSeeder::class,
+            // CertificateSeeder::class,
+            // PostSeeder::class,
+            PostSkillSeeder::class,
         ]);
 
         Certificate::factory(10)->create();

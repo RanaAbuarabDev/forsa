@@ -54,15 +54,15 @@ class ProfileResource extends JsonResource
                 return [
                     'id'=>$cert->id,
                     'name' => $cert->name,
-                    'issued_at' => $cert->issued_at,
+                    'issued_at' => $cert->pivot->issued_at,
                 ];
             }),
             'experiences' => $this->experiences->map(function ($exp) {
                 return [
                     'id'=>$exp->id,
                     'job_title' => $exp->job_title,
-                    'years_of_experience' => $exp->years_of_experience,
-                    'job_description' => $exp->job_description,
+                    'years_of_experience' => $exp->pivot->years_of_experience,
+                    'job_description' => $exp->pivot->job_description,
                 ];
             }),
             'created_at' => $this->created_at->toDateTimeString(),

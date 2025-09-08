@@ -25,10 +25,10 @@ class OtpVerificationService
      */
     public function verify(string $email, string $otp): array
     {
-        // Retrieve the user based on the provided email address
+       
         $user = User::where('email', $email)->first();
 
-        // If no user found with the provided email, return an error
+        
         if (!$user) {
             return [
                 'success' => false,
@@ -37,10 +37,10 @@ class OtpVerificationService
             ];
         }
 
-        // Verify the OTP using the OtpService
+       
         $otpVerified = $this->otpService->verifyOtp($email, $otp, 'registration');
 
-        // If OTP is invalid or expired, return an error
+    
         if (!$otpVerified['success']) {
             return [
                 'success' => false,
@@ -49,14 +49,14 @@ class OtpVerificationService
             ];
         }
 
-        // Mark the user's email as verified and save it
+       
         $user->email_verified_at = now();
         $user->save();
 
-        // Generate a JWT token for the user
+       
         $token = JWTAuth::fromUser($user);
 
-        // Return a success response with the user data and JWT token
+        
         return [
             'success' => true,
             'user' => $user,

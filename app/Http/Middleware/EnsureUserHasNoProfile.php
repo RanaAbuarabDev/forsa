@@ -15,7 +15,7 @@ class EnsureUserHasNoProfile
         if ($user->profile) {
             return response()->json([
                 'message' => 'You already have a profile. You can only update or delete it.'
-            ], 403); // Forbidden
+            ], 403); 
         }
 
         return $next($request);

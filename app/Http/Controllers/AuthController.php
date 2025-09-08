@@ -13,6 +13,7 @@ use App\Services\OtpAttemptService;
 use Illuminate\Http\Request;
 use App\Services\OtpService;
 use App\Http\Requests\ForgotPasswordRequest;
+use App\Http\Requests\ResetPasswordRequest;
 use App\Http\Requests\VerifyOtpRequest;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 use App\Services\OtpRateLimiterService;
@@ -106,18 +107,18 @@ class AuthController extends Controller
     public function verifyRegisterOtp(
         VerifyOtpRequest $request,
         OtpVerificationService $otpVerificationService,
-        OtpAttemptService $attemptService
-    ) {
+        OtpAttemptService $attemptService)
+    {
         $email = $request->email;
     
-        //  وجود المستخدم
+        
         $user = \App\Models\User::where('email', $email)->first();
     
         if (!$user) {
             return ApiResponseService::error('المستخدم غير موجود', 404);
         }
     
-        // اتحقق من الحظر المؤقت
+        
         if ($attemptService->isLocked($email)) {
             $remainingSeconds = $attemptService->getRemainingLockTime($email);
             $minutes = ceil($remainingSeconds / 60);
@@ -132,7 +133,7 @@ class AuthController extends Controller
             );
         }
     
-        // عم اتحقق من الرمز
+       
         $result = $otpVerificationService->verify($email, $request->otp, 'registration');
     
         if (!$result['success']) {
@@ -189,16 +190,16 @@ class AuthController extends Controller
     * @throws \Illuminate\Validation\ValidationException
     */
     public function forgotPassword(ForgotPasswordRequest $request, OtpRateLimiterService $limiter){
-    $email = $request->email;
+        $email = $request->email;
 
-    if ($limiter->isLocked($email)) {
-        $minutes = ceil($limiter->getRemainingLockTime($email) / 60);
-        return ApiResponseService::error("تم حظرك مؤقتًا بسبب عدد محاولات فاشلة كثيرة. يرجى المحاولة بعد {$minutes} دقيقة.", 429);
-    }
+        if ($limiter->isLocked($email)) {
+            $minutes = ceil($limiter->getRemainingLockTime($email) / 60);
+            return ApiResponseService::error("تم حظرك مؤقتًا بسبب عدد محاولات فاشلة كثيرة. يرجى المحاولة بعد {$minutes} دقيقة.", 429);
+        }
 
-    $this->otpService->sendOtp($email, 'password_reset');
+        $this->otpService->sendOtp($email, 'password_reset');
 
-    return ApiResponseService::success(null, 'تم إرسال رمز التحقق إلى بريدك الإلكتروني');
+        return ApiResponseService::success(null, 'تم إرسال رمز التحقق إلى بريدك الإلكتروني');
     }
 
 
@@ -253,20 +254,47 @@ class AuthController extends Controller
             return ApiResponseService::error("رمز التحقق غير صحيح. تبقى {$remaining} محاولات.", 400);
         }
 
-        $attemptService->clearAttempts($email); // Reset after success
+        $attemptService->clearAttempts($email); 
 
    
+
+        //$token = JWTAuth::fromUser($user);
+
+        return ApiResponseService::success(null, 'تم التحقق من الرمز، يمكنك الآن إدخال كلمة مرور جديدة');
+
+    }
+
+
+
+
+   
+
+    
+    
+    public function resetPassword(ResetPasswordRequest $request){
+
+        $user = \App\Models\User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return ApiResponseService::error('المستخدم غير موجود', 404);
+        }
+
+        $user->password = bcrypt($request->password);
+        $user->save();
 
         $token = JWTAuth::fromUser($user);
 
         return ApiResponseService::success([
-            'user' => $user,
             'authorisation' => [
-            'token' => $token,
-            'type' => 'bearer',
-              ]
-        ], 'تم التحقق من الرمز وتسجيل الدخول بنجاح');
-}
+                'token' => $token,
+                'type' => 'bearer',
+            ]
+        ], 'تم تغيير كلمة المرور بنجاح.');
+    }
+
+
+
+
 
 }
     

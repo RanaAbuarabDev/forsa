@@ -110,7 +110,7 @@ class SkillSeeder extends Seeder
             ['name' => 'Scikit-Learn'],
             ['name' => 'Keras'],
 
-            // مهارات الإدارة
+            
             ['name' => 'Lean Management'],
             ['name' => 'Business Development'],
             ['name' => 'Financial Analysis'],
@@ -119,7 +119,7 @@ class SkillSeeder extends Seeder
             ['name' => 'Negotiation Skills'],
             ['name' => 'Operations Management'],
 
-            // مهارات التسويق
+            
             ['name' => 'Social Media Marketing'],
             ['name' => 'Content Strategy'],
             ['name' => 'PPC Advertising'],
@@ -128,7 +128,7 @@ class SkillSeeder extends Seeder
             ['name' => 'Influencer Marketing'],
             ['name' => 'Growth Hacking'],
 
-            // الترجمة واللغات
+            
             ['name' => 'English Translation'],
             ['name' => 'Spanish Translation'],
             ['name' => 'French Translation'],
@@ -136,14 +136,14 @@ class SkillSeeder extends Seeder
             ['name' => 'Arabic Translation'],
             ['name' => 'Mandarin Chinese'],
 
-            // التعليم والتدريب
+            
             ['name' => 'Instructional Design'],
             ['name' => 'Corporate Training'],
             ['name' => 'Online Course Creation'],
             ['name' => 'Coaching'],
             ['name' => 'Mentoring'],
 
-            // الأمان السيبراني
+            
             ['name' => 'Ethical Hacking'],
             ['name' => 'Penetration Testing'],
             ['name' => 'Network Security'],

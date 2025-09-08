@@ -25,18 +25,23 @@ class FilterController extends Controller
 
     public function postFilter(Request $request)
     {
-        $filters = [
-            'governorate_ids' => $request->input('governorates', []),
-            'job_types' => $request->input('job_types', []),
-            'skill' => $request->input('skill'),
-            'experience' => $request->input('experience'),
-            'online' => $request->input('online'),
-        ];
+        $filters = array_filter([
+            'governorate_ids' => array_map('intval', (array) $request->input('governorates', [])),
+            'job_type'        => (array) $request->input('job_type', []),
+            'skill'           => (array) $request->input('skill', []),
+            'experience'      => $request->input('experience'),
+            'online'          => $request->has('online')
+                ? filter_var($request->input('online'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)
+                : null,
+        ], fn($value) => $value !== null && $value !== []);
+
+
 
         $posts = $this->postFilterService->filter($filters);
 
         return PostResource::collection($posts);
     }
+
 
     // public function userFilter(Request $request)
     // {

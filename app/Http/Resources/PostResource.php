@@ -11,6 +11,10 @@ class PostResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
+
+        $userName = $this->relationLoaded('user') && $this->user ? $this->user->name : null;
+        $userImg = $this->relationLoaded('user') && $this->user && $this->user->relationLoaded('profile') ? $this->user->profile?->img : null;
+        $user = $this->user;
         $base = [
             'id' => $this->id,
             'type' => $this->type,
@@ -20,8 +24,8 @@ class PostResource extends JsonResource
             'job_type' => $this->job_type,
             'job_title' => $this->experience?->job_title,
             'created_at' => $this->created_at->diffForHumans(),
-            'name' => $this->user->name,
-            'img' => $this->user->profile?->img,
+            'name' => $userName,
+            'img'  =>  $userImg,
             
         ];
 

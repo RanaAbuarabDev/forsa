@@ -29,20 +29,19 @@ class PostController extends Controller
         
         $user = $request->user();
 
-        // جلب مهارات وخبرات المستخدم
+       
         $userSkills = $user->profile->skills->pluck('id')->toArray();
         $userExperiences = $user->profile->experiences->pluck('id')->toArray();
 
-        // إعدادات الصفحة
+    
         $perPage = 20;
-        $desiredMatchCount = (int) round($perPage * 0.35); // 35% من البوستات
-
-        // جلب البوستات المتطابقة (skills أو experiences)
+        $desiredMatchCount = (int) round($perPage * 0.35); 
+     
         $matchedPosts = Post::with(['user.profile', 'governorate', 'skills'])
             ->where(function($query) use ($userSkills, $userExperiences) {
                 $query->whereHas('skills', function($q) use ($userSkills) {
                     $q->whereIn('skills.id', $userSkills);
-                })->orWhereHas('experiences', function($q) use ($userExperiences) {
+                })->orWhereHas('experience', function($q) use ($userExperiences) {
                     $q->whereIn('experiences.id', $userExperiences);
                 });
             })
@@ -50,10 +49,9 @@ class PostController extends Controller
             ->take($desiredMatchCount)
             ->get();
 
-        // عدد البوستات المتطابقة فعليًا
+       
         $actualMatchCount = $matchedPosts->count();
 
-        // جلب باقي البوستات (غير المتطابقة)
         $otherCount = $perPage - $actualMatchCount;
         $otherPosts = Post::with(['user.profile', 'governorate', 'skills'])
             ->whereNotIn('id', $matchedPosts->pluck('id'))
@@ -61,11 +59,11 @@ class PostController extends Controller
             ->take($otherCount)
             ->get();
 
-        // دمج البوستات وترتيبها حسب التاريخ
+       
         $allPosts = $matchedPosts->merge($otherPosts);
         $sortedPosts = $allPosts->sortByDesc('created_at')->values();
 
-        // Pagination يدوي
+        
         $page = $request->get('page', 1);
         $paginated = new \Illuminate\Pagination\LengthAwarePaginator(
             $sortedPosts->forPage($page, $perPage),

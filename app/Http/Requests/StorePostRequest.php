@@ -30,7 +30,8 @@ class StorePostRequest extends FormRequest
             'governorate_id' => 'required|exists:governorates,id',
             'experience' => 'required|string|max:100',
             'skills' => 'required|array|min:1',
-            'skills.*' => 'string',
+            'skills.*' => 'string|max:100',
+
             'job_type' => 'nullable|in:training,volunteer,temporary,full-time,part-time,contracts,free-work',
         ];
 
